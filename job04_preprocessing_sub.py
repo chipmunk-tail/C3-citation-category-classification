@@ -9,8 +9,14 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 
+# Notice
+# install java jdk21
+#
+#
+
+
 # Open CSV
-df = pd.read_csv('crawling_data_train/naver_headline_news_total_20241220.csv')
+df = pd.read_csv('crawling_data/KCL_titles_nature_20241224.csv')
 df.drop_duplicates(inplace = True)                          # Remove duplicate
 df.reset_index(drop = True, inplace = True)                 # Drop default index
 print(df.head())
@@ -34,7 +40,7 @@ print(label)
 
 
 # save encoder
-with open('format_files/encoder.pickle', 'wb') as f:            # wb = write binary
+with open('format_files/sub_encoder.pickle', 'wb') as f:            # wb = write binary
     pickle.dump(encoder, f)
 
 
@@ -52,8 +58,8 @@ print(X)
 
 
 # Open korean stopword
-stopwords = pd.read_csv('format_files/stopwords.csv', index_col = 0)
-print(stopwords)
+stopwords_kor = pd.read_csv('format_files/stopwords_kor.csv', index_col = 0)
+stopwords_eng = pd.read_csv('format_files/stopwords_eng.csv', index_col = 0)
 
 
 # Replace stopword to ' '
@@ -61,8 +67,9 @@ for sentence in range(len(X)):
     words = []
     for word in range(len(X[sentence])):
         if len(X[sentence][word]) > 1:              # drop useless word
-            if X[sentence][word] not in list(stopwords['stopword']):
+            if X[sentence][word] not in (list(stopwords_kor['stopword_kor']) or list(stopwords_eng['stopword_eng'])):
                 words.append(X[sentence][word])
+
     X[sentence] = ' '.join(words)
 print(X[:5])
 
@@ -96,11 +103,11 @@ print(X_test.shape, Y_test.shape)
 
 
 # Save token
-with open('./models/news_token_max_{}.pickle'.format(max), 'wb') as f:
+with open('./format_files/paper_sub_title_token_max_{}.pickle'.format(max), 'wb') as f:
     pickle.dump(token, f)
 
 # Save
-np.save('./crawling_data/news_data_X_train_wordsize_{}_max_{}'.format(wordsize, max), X_train)      # .npy
-np.save('./crawling_data/news_data_X_test_wordsize_{}_max_{}'.format(wordsize, max), X_test)
-np.save('./crawling_data/news_data_Y_train_wordsize_{}_max{}'.format(wordsize, max), Y_train)
-np.save('./crawling_data/news_data_Y_test_wordsize_{}_max_{}'.format(wordsize, max), Y_test)
+np.save('./train_test_split/paper_sub_title_data_X_train_wordsize_{}_max_{}'.format(wordsize, max), X_train)      # .npy
+np.save('./train_test_split/paper_sub_title_data_X_test_wordsize_{}_max_{}'.format(wordsize, max), X_test)
+np.save('./train_test_split/paper_sub_title_data_Y_train_wordsize_{}_max{}'.format(wordsize, max), Y_train)
+np.save('./train_test_split/paper_sub_title_data_Y_test_wordsize_{}_max_{}'.format(wordsize, max), Y_test)

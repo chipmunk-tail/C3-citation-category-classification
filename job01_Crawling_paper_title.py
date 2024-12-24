@@ -40,27 +40,25 @@ driver = webdriver.Chrome(service = service, options = options)
 
 
 
+
 # Data crawling
 for i in range(len(category)):
+
     url = 'https://www.kci.go.kr/kciportal/po/search/poArtiSearList.kci'
     driver.get(url)
+
+    category_btn_xpath = '//*[@id="conLeft"]/div/div[1]/ul/li[{}]'.format((i + 1))      # disable post category
+    time.sleep(0.3)
+    driver.find_element(By.XPATH, category_btn_xpath).click()
+
+    select_btn = '//*[@id="conLeft"]/div/div[2]'
+    time.sleep(0.3)
+    driver.find_element(By.XPATH, select_btn).click()
+
     titles = []                                                 # Create empty list for save headline
 
-    if i == 0:
-        category_btn_xpath = '//*[@id="conLeft"]/div/div[1]/ul/li[1]'
-        time.sleep(0.3)
-        driver.find_element(By.XPATH, category_btn_xpath).click()
-    else:
-        category_btn_xpath = '//*[@id="conLeft"]/div/div[1]/ul/li[{}]'.format((i + 1))      # disable post category
-        time.sleep(0.3)
-        driver.find_element(By.XPATH, category_btn_xpath).click()
 
-        category_btn_xpath = '//*[@id="conLeft"]/div/div[1]/ul/li[{}]'.format((i + 1))      # select new category
-        time.sleep(0.3)
-        driver.find_element(By.XPATH, category_btn_xpath).click()
-
-
-    for j in range(100):
+    for j in range(3):
 
         for k in range(50):
             title_xpath = '//*[@id="poArtiSearList"]/table/tbody/tr[{}]/td[3]/a'.format((k + 1))
@@ -73,6 +71,12 @@ for i in range(len(category)):
                 print(title)
             except:
                 print(i, j, k)
+
+        next_button_xpath = '//*[@id="contents"]/div[2]/div[2]/div/a[12]'
+        driver.execute_script('window.scrollTo(0, 20000)')
+        time.sleep(0.8)
+        driver.find_element(By.XPATH, next_button_xpath).click()
+
 
     df_section_titles = pd.DataFrame(titles, columns = ['titles'])          # Create columns 'titles'
     df_section_titles['category'] = category[i]

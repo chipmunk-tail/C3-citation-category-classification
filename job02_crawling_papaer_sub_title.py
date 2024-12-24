@@ -20,7 +20,7 @@ import datetime
 
 
 # News Category
-category = ['생물학', '생활과학', '물리학', '화학', '수학', '자연과학일반', '통계학','기타자연과학', '지구과학']
+category = ['생물학', '생활과학', '물리학', '화학', '수학', '자연과학일반', '통계학','기타자연과학', '지구과학', '지질학']
 
 
 # Create a empty DataFrame
@@ -39,25 +39,32 @@ service = ChromeService(executable_path=ChromeDriverManager().install())
 driver = webdriver.Chrome(service = service, options = options)
 
 
-
 # Data crawling
 for i in range(len(category)):
+
     url = 'https://www.kci.go.kr/kciportal/po/search/poArtiSearList.kci'
     driver.get(url)
+
+    # select category '자연과학'
+    category_btn_xpath = '//*[@id="conLeft"]/div/div[1]/ul/li[3]'
+    time.sleep(0.3)
+    driver.find_element(By.XPATH, category_btn_xpath).click()
+
+    select_btn = '//*[@id="conLeft"]/div/div[2]'
+    time.sleep(0.3)
+    driver.find_element(By.XPATH, select_btn).click()
+
+
+    # select sub category
+    category_btn_xpath = '//*[@id="conLeft"]/div/div[3]/ul/li[{}]'.format((i + 1))
+    time.sleep(0.3)
+    driver.find_element(By.XPATH, category_btn_xpath).click()
+
+    select_btn = '//*[@id="conLeft"]/div/div[4]'
+    time.sleep(0.3)
+    driver.find_element(By.XPATH, select_btn).click()
+
     titles = []                                                 # Create empty list for save headline
-
-    if i == 0:
-        category_btn_xpath = '//*[@id="conLeft"]/div/div[3]/ul/li[1]'
-        time.sleep(0.3)
-        driver.find_element(By.XPATH, category_btn_xpath).click()
-    else:
-        category_btn_xpath = '//*[@id="conLeft"]/div/div[3]/ul/li[{}]'.format((i + 1))      # disable post category
-        time.sleep(0.3)
-        driver.find_element(By.XPATH, category_btn_xpath).click()
-
-        category_btn_xpath = '//*[@id="conLeft"]/div/div[3]/ul/li[{}]'.format((i + 1))      # select new category
-        time.sleep(0.3)
-        driver.find_element(By.XPATH, category_btn_xpath).click()
 
 
     for j in range(40):
@@ -67,12 +74,18 @@ for i in range(len(category)):
 
             try:
                 title = driver.find_element(By.XPATH, title_xpath).text
-                title = re.compile('[^가-힣 ]').sub(' ', title)        # Repalce all to 'null' execpt "가 ~ 힣" && " "
+                title = re.compile('[^가-힣A-Za-z ]').sub(' ', title)        # Repalce all to 'null' execpt "가 ~ 힣" && " "
                 titles.append(title)
 
                 print(title)
             except:
-                print(i, j, k)
+                print('error occurred', i, j, k)
+
+
+        next_button_xpath = '//*[@id="contents"]/div[2]/div[2]/div/a[12]'
+        driver.execute_script('window.scrollTo(0, 20000)')
+        time.sleep(0.8)
+        driver.find_element(By.XPATH, next_button_xpath).click()
 
     df_section_titles = pd.DataFrame(titles, columns = ['titles'])          # Create columns 'titles'
     df_section_titles['category'] = category[i]
@@ -86,6 +99,6 @@ driver.close()                                                 # close browser
 print(df_titles.head())
 df_titles.info()
 print(df_titles['category'].value_counts())
-df_titles.to_csv('./crawling_data/KCL_titles_nature_{}.csv'.format(
+df_titles.to_csv('./crawling_data/KCL_titles_sub_{}.csv'.format(
     datetime.datetime.now().strftime('%Y%m%d')), index = False) # Change time format to 'YYYYMMDD'
                                                                 # index = False == 0, 1, 2 default index = False
