@@ -58,7 +58,7 @@ for i in range(len(category)):
     titles = []                                                 # Create empty list for save headline
 
 
-    for j in range(3):
+    for j in range(200):
 
         for k in range(50):
             title_xpath = '//*[@id="poArtiSearList"]/table/tbody/tr[{}]/td[3]/a'.format((k + 1))
