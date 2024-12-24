@@ -10,8 +10,8 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 
 # Notice
-# install java jdk21
 #
+# Please install java jdk21
 #
 
 
