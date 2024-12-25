@@ -52,7 +52,7 @@ for i in range(len(category)):
     titles = []                                                 # Create empty list for save headline
 
 
-    for j in range(100):                                        # Category each 10,000
+    for j in range(200):                                        # Category each 10,000
 
         for k in range(50):
             title_xpath = '//*[@id="poArtiSearList"]/table/tbody/tr[{}]/td[3]/a'.format((k + 1))
@@ -60,6 +60,7 @@ for i in range(len(category)):
             try:
                 title = driver.find_element(By.XPATH, title_xpath).text
                 title = re.compile('[^가-힣A-Za-z ]').sub(' ', title)        # Repalce all to 'null' execpt "가 ~ 힣, A-Z, a-z" && " "
+                title = (title.lower())
                 titles.append(title)
 
                 print(title)
