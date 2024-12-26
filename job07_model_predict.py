@@ -16,8 +16,6 @@ import datetime
 
 
 
-
-
 # open CSV
 # df = pd.read_csv('crawling_data_predict/naver_headline_news_20241223.csv')
 # df.drop_duplicates(inplace = True)                          # Remove duplicate
@@ -37,16 +35,13 @@ Y = df['category']
 with open('format_files/sub_encoder.pickle', 'rb') as f:            # rb = read binary
     encoder = pickle.load(f)
 
-
 label = encoder.classes_
 print(label)
-
 
 # onehot encode
 labeled_y = encoder.transform(Y)
 onehot_Y = to_categorical(labeled_y)
 print(onehot_Y)
-
 
 
 # X : morpheme separation
@@ -80,7 +75,6 @@ with open('format_files/paper_sub_title_token_max_43.pickle', 'rb') as f:
 
 tokened_X = token.texts_to_sequences(X)
 print(tokened_X[:5])
-
 
 # if token over 43
 for i in range(len(tokened_X)):

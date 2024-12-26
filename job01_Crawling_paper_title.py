@@ -14,17 +14,8 @@ import datetime
 
 # Notice
 #
+# crawling paper titles main category
 #
-#
-
-
-
-# News Category
-category = ['인문학', '사회과학', '자연과학', '공학', '의학학', '농수해양', '예술체육', '복합학']
-
-
-# Create a empty DataFrame
-df_titles = pd.DataFrame()
 
 
 # Web driver setting
@@ -33,39 +24,43 @@ user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTM
 options.add_argument('user_agent=' + user_agent)
 options.add_argument('lang=ko_KR')
 
-
 # Webdriver setting
 service = ChromeService(executable_path=ChromeDriverManager().install())
 driver = webdriver.Chrome(service = service, options = options)
 
+# Paper category
+category = ['인문학', '사회과학', '자연과학', '공학', '의학학', '농수해양', '예술체육', '복합학']
 
+# Create a empty DataFrame
+df_titles = pd.DataFrame()
 
 
 # Data crawling
 for i in range(len(category)):
 
-    url = 'https://www.kci.go.kr/kciportal/po/search/poArtiSearList.kci'
+    url = 'https://www.kci.go.kr/kciportal/po/search/poArtiSearList.kci'                # reset browser
     driver.get(url)
 
-    category_btn_xpath = '//*[@id="conLeft"]/div/div[1]/ul/li[{}]'.format((i + 1))      # disable post category
+    category_btn_xpath = '//*[@id="conLeft"]/div/div[1]/ul/li[{}]'.format((i + 1))      # select category
     time.sleep(0.3)
     driver.find_element(By.XPATH, category_btn_xpath).click()
 
-    select_btn = '//*[@id="conLeft"]/div/div[2]'
+    select_btn = '//*[@id="conLeft"]/div/div[2]'                                        # search button
     time.sleep(0.3)
     driver.find_element(By.XPATH, select_btn).click()
 
     titles = []                                                 # Create empty list for save headline
 
 
-    for j in range(200):
+    for j in range(200):                                        # Category each 10,000
 
         for k in range(50):
             title_xpath = '//*[@id="poArtiSearList"]/table/tbody/tr[{}]/td[3]/a'.format((k + 1))
 
             try:
                 title = driver.find_element(By.XPATH, title_xpath).text
-                title = re.compile('[^가-힣 ]').sub(' ', title)        # Repalce all to 'null' execpt "가 ~ 힣" && " "
+                title = re.compile('[^가-힣A-Za-z ]').sub(' ', title)        # Repalce all to 'null' execpt "가 ~ 힣, A-Z, a-z" && " "
+                title = (title.lower())
                 titles.append(title)
 
                 print(title)
@@ -73,17 +68,16 @@ for i in range(len(category)):
                 print(i, j, k)
 
         next_button_xpath = '//*[@id="contents"]/div[2]/div[2]/div/a[12]'
-        driver.execute_script('window.scrollTo(0, 20000)')
+        driver.execute_script('window.scrollTo(0, 20000)')                      # scroll to the bottom of the site to activate button
         time.sleep(0.8)
         driver.find_element(By.XPATH, next_button_xpath).click()
 
 
-    df_section_titles = pd.DataFrame(titles, columns = ['titles'])          # Create columns 'titles'
+    df_section_titles = pd.DataFrame(titles, columns = ['titles'])              # Create columns 'titles'
     df_section_titles['category'] = category[i]
     df_titles = pd.concat([df_titles, df_section_titles], axis = 'rows', ignore_index = True)
 
 
-time.sleep(3)                                                  # delay 3s
 driver.close()                                                 # close browser
 
 print(df_titles.head())

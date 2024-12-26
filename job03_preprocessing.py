@@ -10,13 +10,13 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 
 # Notice
-# install java jdk21
 #
+# Please install java jdk21
 #
 
 
 # Open CSV
-df = pd.read_csv('crawling_data/KCL_titles_nature_20241224.csv')
+df = pd.read_csv('crawling_data/KCL_titles_total_20241225.csv')
 df.drop_duplicates(inplace = True)                          # Remove duplicate
 df.reset_index(drop = True, inplace = True)                 # Drop default index
 print(df.head())
@@ -102,14 +102,12 @@ print(X_train.shape, Y_train.shape)
 print(X_test.shape, Y_test.shape)
 
 
-
-
 # Save token
-with open('./models/news_token_max_{}.pickle'.format(max), 'wb') as f:
+with open('./format_files/paper_title_token_max_{}.pickle'.format(max), 'wb') as f:
     pickle.dump(token, f)
 
 # Save
-np.save('./crawling_data/news_data_X_train_wordsize_{}_max_{}'.format(wordsize, max), X_train)      # .npy
-np.save('./crawling_data/news_data_X_test_wordsize_{}_max_{}'.format(wordsize, max), X_test)
-np.save('./crawling_data/news_data_Y_train_wordsize_{}_max{}'.format(wordsize, max), Y_train)
-np.save('./crawling_data/news_data_Y_test_wordsize_{}_max_{}'.format(wordsize, max), Y_test)
+np.save('./train_test_split/paper_title_data_X_train_wordsize_{}_max_{}'.format(wordsize, max), X_train)      # .npy
+np.save('./train_test_split/paper_title_data_X_test_wordsize_{}_max_{}'.format(wordsize, max), X_test)
+np.save('./train_test_split/paper_title_data_Y_train_wordsize_{}_max{}'.format(wordsize, max), Y_train)
+np.save('./train_test_split/paper_title_data_Y_test_wordsize_{}_max_{}'.format(wordsize, max), Y_test)

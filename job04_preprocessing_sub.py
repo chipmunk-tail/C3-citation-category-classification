@@ -10,13 +10,13 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 
 # Notice
-# install java jdk21
 #
+# Please install java jdk21
 #
 
 
 # Open CSV
-df = pd.read_csv('crawling_data/KCL_titles_nature_20241224.csv')
+df = pd.read_csv('crawling_data/KCL_titles_sub_20241225.csv')
 df.drop_duplicates(inplace = True)                          # Remove duplicate
 df.reset_index(drop = True, inplace = True)                 # Drop default index
 print(df.head())
