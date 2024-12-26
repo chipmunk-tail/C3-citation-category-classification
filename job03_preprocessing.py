@@ -16,7 +16,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 
 # Open CSV
-df = pd.read_csv('crawling_data/KCL_titles_total_20241226.csv')
+df = pd.read_csv('crawling_data/KCL_titles_total_20241225.csv')
 df.drop_duplicates(inplace = True)                          # Remove duplicate
 df.reset_index(drop = True, inplace = True)                 # Drop default index
 print(df.head())
@@ -69,8 +69,8 @@ for sentence in range(len(X)):
         if len(X[sentence][word]) > 1:              # drop useless word
             if X[sentence][word] not in (list(stopwords_kor['stopword_kor']) or list(stopwords_eng['stopword_eng'])):
                 if (X[sentence][word] >= 'a' and X[sentence][word] <= 'z'):
-                    if len(X[sentence][word]) < 1:
-                        word = ' '
+                    if len(X[sentence][word]) <= 2:
+                        X[sentence][word] = ''
                 words.append(X[sentence][word])
 
     X[sentence] = ' '.join(words)
@@ -111,7 +111,7 @@ with open('./format_files/paper_title_token_max_{}.pickle'.format(max), 'wb') as
     pickle.dump(token, f)
 
 # Save
-np.save('./train_test_split/paper_title_data_b_X_train_wordsize_{}_max_{}'.format(wordsize, max), X_train)      # .npy
-np.save('./train_test_split/paper_title_data_b_X_test_wordsize_{}_max_{}'.format(wordsize, max), X_test)
-np.save('./train_test_split/paper_title_data_b_Y_train_wordsize_{}_max{}'.format(wordsize, max), Y_train)
-np.save('./train_test_split/paper_title_data_b_Y_test_wordsize_{}_max_{}'.format(wordsize, max), Y_test)
+np.save('./train_test_split/paper_title_data_X_train_wordsize_{}_max_{}'.format(wordsize, max), X_train)      # .npy
+np.save('./train_test_split/paper_title_data_X_test_wordsize_{}_max_{}'.format(wordsize, max), X_test)
+np.save('./train_test_split/paper_title_data_Y_train_wordsize_{}_max{}'.format(wordsize, max), Y_train)
+np.save('./train_test_split/paper_title_data_Y_test_wordsize_{}_max_{}'.format(wordsize, max), Y_test)

@@ -68,10 +68,14 @@ for sentence in range(len(X)):
     for word in range(len(X[sentence])):
         if len(X[sentence][word]) > 1:              # drop useless word
             if X[sentence][word] not in (list(stopwords_kor['stopword_kor']) or list(stopwords_eng['stopword_eng'])):
+                if (X[sentence][word] >= 'a' and X[sentence][word] <= 'z'):
+                    if len(X[sentence][word]) <= 2:
+                        X[sentence][word] = ''
                 words.append(X[sentence][word])
 
     X[sentence] = ' '.join(words)
-print(X[:5])
+# print(X[:5])
+print(X)
 
 
 #
