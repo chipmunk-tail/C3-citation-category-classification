@@ -62,16 +62,20 @@ stopwords_kor = pd.read_csv('format_files/stopwords_kor.csv', index_col = 0)
 stopwords_eng = pd.read_csv('format_files/stopwords_eng.csv', index_col = 0)
 
 
-# Replace stopword to ' '
+# Drop stopword
 for sentence in range(len(X)):
     words = []
     for word in range(len(X[sentence])):
         if len(X[sentence][word]) > 1:              # drop useless word
             if X[sentence][word] not in (list(stopwords_kor['stopword_kor']) or list(stopwords_eng['stopword_eng'])):
+                if (X[sentence][word] >= 'a' and X[sentence][word] <= 'z'):
+                    if len(X[sentence][word]) < 1:
+                        word = ' '
                 words.append(X[sentence][word])
 
     X[sentence] = ' '.join(words)
-print(X[:5])
+# print(X[:5])
+print(X)
 
 
 #
@@ -107,7 +111,7 @@ with open('./format_files/paper_title_token_max_{}.pickle'.format(max), 'wb') as
     pickle.dump(token, f)
 
 # Save
-np.save('./train_test_split/paper_title_data_bert_X_train_wordsize_{}_max_{}'.format(wordsize, max), X_train)      # .npy
-np.save('./train_test_split/paper_title_data_bert_X_test_wordsize_{}_max_{}'.format(wordsize, max), X_test)
-np.save('./train_test_split/paper_title_data_bert_Y_train_wordsize_{}_max{}'.format(wordsize, max), Y_train)
-np.save('./train_test_split/paper_title_data_bert_Y_test_wordsize_{}_max_{}'.format(wordsize, max), Y_test)
+np.save('./train_test_split/paper_title_data_b_X_train_wordsize_{}_max_{}'.format(wordsize, max), X_train)      # .npy
+np.save('./train_test_split/paper_title_data_b_X_test_wordsize_{}_max_{}'.format(wordsize, max), X_test)
+np.save('./train_test_split/paper_title_data_b_Y_train_wordsize_{}_max{}'.format(wordsize, max), Y_train)
+np.save('./train_test_split/paper_title_data_b_Y_test_wordsize_{}_max_{}'.format(wordsize, max), Y_test)
