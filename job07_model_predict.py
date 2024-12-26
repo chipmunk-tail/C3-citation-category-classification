@@ -10,7 +10,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from keras.models import load_model
 
 
-df = pd.read_csv('crawling_data_predict/KCL_titles_total_predict_20241226.csv.csv')
+df = pd.read_csv('crawling_data/KCL_titles_total_predict_20241226.csv')
 df.drop_duplicates(inplace = True)                          # Remove duplicate
 df.reset_index(drop = True, inplace = True)                 # Drop default index
 print(df.head())
@@ -71,9 +71,9 @@ print(tokened_X[:5])
 
 # if token over 43
 for i in range(len(tokened_X)):
-    if len(tokened_X[i]) > 43:
-        tokened_X[i] = tokened_X[i][:43]
-X_pad = pad_sequences(tokened_X, 43)
+    if len(tokened_X[i]) > 51:
+        tokened_X[i] = tokened_X[i][:51]
+X_pad = pad_sequences(tokened_X, 51)
 
 
 print(X_pad[:5])
@@ -81,7 +81,7 @@ print(X_pad[:5])
 
 
 
-model = load_model('./models/paper_main_category_classification_model_0.6387755274772644.h5')
+model = load_model('./models/paper_main_category_classification_model_set_0.5980924367904663.h5')
 preds = model.predict(X_pad)
 
 predicts = []
