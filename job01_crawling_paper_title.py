@@ -59,7 +59,7 @@ for i in range(len(category)):
 
             try:
                 title = driver.find_element(By.XPATH, title_xpath).text
-                title = re.compile('[^가-힣A-Za-z ]').sub('', title)        # Repalce all to 'null' execpt "가 ~ 힣, A ~ Z, a ~ z, space"
+                title = re.compile('[^가-힣A-Za-z ]').sub(' ', title)        # Repalce all to 'null' execpt "가 ~ 힣, A ~ Z, a ~ z, space"
                 title = (title.lower())                                         # Convert uppercase letters to lowercase
                 titles.append(title)
 

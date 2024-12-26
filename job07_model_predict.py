@@ -11,6 +11,7 @@ from keras.models import load_model
 
 
 df = pd.read_csv('crawling_data/KCL_titles_total_predict_20241226.csv')
+df = df[df['titles'].str.strip() != '']
 df.drop_duplicates(inplace = True)                          # Remove duplicate
 df.reset_index(drop = True, inplace = True)                 # Drop default index
 print(df.head())

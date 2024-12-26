@@ -17,6 +17,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # Open CSV
 df = pd.read_csv('crawling_data/KCL_titles_sub_20241226.csv')
+df = df[df['titles'].str.strip() != '']
 df.drop_duplicates(inplace = True)                          # Remove duplicate
 df.reset_index(drop = True, inplace = True)                 # Drop default index
 print(df.head())
