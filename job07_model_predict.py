@@ -9,30 +9,20 @@ from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from keras.models import load_model
 
-from bs4 import BeautifulSoup
-import requests
-import re
-import datetime
 
-
-
-# open CSV
-# df = pd.read_csv('crawling_data_predict/naver_headline_news_20241223.csv')
-# df.drop_duplicates(inplace = True)                          # Remove duplicate
-# df.reset_index(drop = True, inplace = True)                 # Drop default index
-# print(df.head())
-# df.info()
-# print(df.category.value_counts())
-data = [['국내 단백질 소비시장 동향: 축산물, 수산물, 식물성 단백질 식품을 중심으로', '생활과학']]
-
-df = pd.DataFrame(data, columns = ['titles', 'category'])
+df = pd.read_csv('crawling_data_predict/KCL_titles_total_predict_20241226.csv.csv')
+df.drop_duplicates(inplace = True)                          # Remove duplicate
+df.reset_index(drop = True, inplace = True)                 # Drop default index
+print(df.head())
+df.info()
+print(df.category.value_counts())
 
 
 # Makes Dataframe
 X = df['titles']
 Y = df['category']
 
-with open('format_files/sub_encoder.pickle', 'rb') as f:            # rb = read binary
+with open('format_files/encoder.pickle', 'rb') as f:            # rb = read binary
     encoder = pickle.load(f)
 
 label = encoder.classes_
@@ -62,6 +52,9 @@ for sentence in range(len(X)):
     for word in range(len(X[sentence])):
         if len(X[sentence][word]) > 1:              # drop useless word
             if X[sentence][word] not in (list(stopwords_kor['stopword_kor']) or list(stopwords_eng['stopword_eng'])):
+                if (X[sentence][word] >= 'a' and X[sentence][word] <= 'z'):
+                    if len(X[sentence][word]) <= 2:
+                        X[sentence][word] = ''
                 words.append(X[sentence][word])
 
     X[sentence] = ' '.join(words)
@@ -70,7 +63,7 @@ print(X[:5])
 
 # new token not in model = 0
 
-with open('format_files/paper_sub_title_token_max_43.pickle', 'rb') as f:
+with open('format_files/paper_title_token_max_51.pickle', 'rb') as f:
     token = pickle.load(f)
 
 tokened_X = token.texts_to_sequences(X)
@@ -93,14 +86,25 @@ preds = model.predict(X_pad)
 
 predicts = []
 for pred in preds:
-    most = label[np.argmax(pred)]
+    first = label[np.argmax(pred)]
     pred[np.argmax(pred)] = 0
     second = label[np.argmax(pred)]
-    predicts.append([most, second])
+    pred[np.argmax(pred)] = 0
+    third = label[np.argmax(pred)]
+    pred[np.argmax(pred)] = 0
+    fourth = label[np.argmax(pred)]
+    pred[np.argmax(pred)] = 0
+    fifth = label[np.argmax(pred)]
+    pred[np.argmax(pred)] = 0
+    sixth = label[np.argmax(pred)]
+    pred[np.argmax(pred)] = 0
+    seventh = label[np.argmax(pred)]
+    pred[np.argmax(pred)] = 0
+    eighth = label[np.argmax(pred)]
+    predicts.append([first, second, third, fourth, fifth, sixth, seventh, eighth])
 
 
 df['predict'] = predicts
-
 print(df.head(30))
 
 
