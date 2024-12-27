@@ -25,7 +25,7 @@ print(df.category.value_counts())
 X = df['titles']
 Y = df['category']
 
-with open('format_files/encoder.pickle', 'rb') as f:            # rb = read binary
+with open('format_files/encoder.pickle', 'rb') as   f:            # rb = read binary
     encoder = pickle.load(f)
 
 label = encoder.classes_
@@ -85,7 +85,7 @@ print(X_pad[:5])
 
 
 
-model = load_model('./models/paper_main_category_classification_model_set_A_0.5907557010650635.h5')
+model = load_model('./models/paper_main_category_classification_model_set_A_0.6025301814079285.h5')
 preds = model.predict(X_pad)
 
 predicts = []
