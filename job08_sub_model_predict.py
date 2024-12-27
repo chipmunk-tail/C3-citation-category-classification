@@ -67,7 +67,7 @@ print(X[:5])
 
 # new token not in model = 0
 
-with open('format_files/paper_title_token_max_51.pickle', 'rb') as f:
+with open('format_files/paper_sub_title_token_max_30.pickle', 'rb') as f:
     token = pickle.load(f)
 
 tokened_X = token.texts_to_sequences(X)
@@ -85,7 +85,7 @@ print(X_pad[:5])
 
 
 
-model = load_model('./models/paper_sub_category_classification_model_A_0.6566632986068726.h5')
+model = load_model('./models/paper_sub_category_classification_model_B_0.6480162739753723.h5')
 preds = model.predict(X_pad)
 
 predicts = []

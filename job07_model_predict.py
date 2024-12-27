@@ -85,7 +85,7 @@ print(X_pad[:5])
 
 
 
-model = load_model('./models/paper_main_category_classification_model_set_A_0.6025301814079285.h5')
+model = load_model('./models/paper_main_category_classification_model_set_B_0.5791409015655518.h5')
 preds = model.predict(X_pad)
 
 predicts = []
