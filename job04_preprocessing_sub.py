@@ -57,6 +57,7 @@ print(onehot_Y)
 okt = Okt()
 for i in range(len(X)):
     X[i] = okt.morphs(X[i], stem = True)
+    X[i] = [word for word in X[i] if len(word) > 1]  # 길이가 1인 단어 제거
 print(X)
 
 
@@ -73,7 +74,7 @@ for sentence in range(len(X)):
             if X[sentence][word] not in (list(stopwords_kor['stopword_kor']) or list(stopwords_eng['stopword_eng'])):
                 if (X[sentence][word] >= 'a' and X[sentence][word] <= 'z'):
                     if len(X[sentence][word]) <= 2:
-                        X[sentence][word] = ''
+                        continue
                 words.append(X[sentence][word])
 
     X[sentence] = ' '.join(words)
