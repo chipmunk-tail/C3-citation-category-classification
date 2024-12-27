@@ -44,7 +44,7 @@ fit_hist = model.fit(X_train, Y_train, batch_size = 128,
 
 score = model.evaluate(X_test, Y_test, verbose = 0)
 print('Final test set accuracy', score[1])
-model.save('./models/paper_sub_category_classification_model_{}.h5'.format(
+model.save('./models/paper_sub_category_classification_model_A_{}.h5'.format(
     fit_hist.history['val_accuracy'][-1]))
 
 plt.plot(fit_hist.history['accuracy'], label = 'accuracy')

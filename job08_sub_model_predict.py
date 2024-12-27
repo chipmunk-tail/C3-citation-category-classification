@@ -11,7 +11,9 @@ from keras.models import load_model
 
 
 df = pd.read_csv('crawling_data/KCL_titles_sub_predict_20241226.csv')
-df = df[df['titles'].str.strip() != '']
+df = df.apply(lambda x: x.str.strip() if x.dtype == "object" else x, axis=0)
+df.replace('', pd.NA, inplace=True)
+df.dropna(inplace = True)
 df.drop_duplicates(inplace = True)                          # Remove duplicate
 df.reset_index(drop = True, inplace = True)                 # Drop default index
 print(df.head())
@@ -82,7 +84,7 @@ print(X_pad[:5])
 
 
 
-model = load_model('./models/paper_main_category_classification_model_set_0.5980924367904663.h5')
+model = load_model('./models/paper_sub_category_classification_model_A_0.6698880791664124.h5')
 preds = model.predict(X_pad)
 
 predicts = []
@@ -102,7 +104,11 @@ for pred in preds:
     seventh = label[np.argmax(pred)]
     pred[np.argmax(pred)] = 0
     eighth = label[np.argmax(pred)]
-    predicts.append([first, second, third, fourth, fifth, sixth, seventh, eighth])
+    pred[np.argmax(pred)] = 0
+    ninth = label[np.argmax(pred)]
+    pred[np.argmax(pred)] = 0
+    tenth = label[np.argmax(pred)]
+    predicts.append([first, second, third, fourth, fifth, sixth, seventh, eighth, ninth, tenth])
 
 
 df['predict'] = predicts

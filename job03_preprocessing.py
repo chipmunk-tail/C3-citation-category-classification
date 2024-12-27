@@ -17,7 +17,9 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # Open CSV
 df = pd.read_csv('crawling_data/KCL_titles_total_20241225.csv')
-df = df[df['titles'].str.strip() != '']
+df = df.apply(lambda x: x.str.strip() if x.dtype == "object" else x, axis=0)
+df.replace('', pd.NA, inplace=True)
+df.dropna(inplace=True)
 df.drop_duplicates(inplace = True)                          # Remove duplicate
 df.reset_index(drop = True, inplace = True)                 # Drop default index
 print(df.head())
@@ -72,8 +74,7 @@ for sentence in range(len(X)):
                 if (X[sentence][word] >= 'a' and X[sentence][word] <= 'z'):
                     if len(X[sentence][word]) <= 2:
                         X[sentence][word] = ''
-                    if X[sentence][word] != ' ':
-                        words.append(X[sentence][word])
+                words.append(X[sentence][word])
 
     X[sentence] = ' '.join(words)
 # print(X[:5])
